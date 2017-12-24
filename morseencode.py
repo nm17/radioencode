@@ -1,5 +1,3 @@
-import numpy
-
 morseAlphabet = {
     "A": ".-",
     "B": "-...",
@@ -73,40 +71,3 @@ def encode_to_morse(message):
     for char in message:
         encoded_message += morseAlphabet[char.upper()] + " "
     return encoded_message
-
-
-class Morse:
-    def gen_wave(self, pos: int, volume: float = 0.5):
-        return self._dtype(
-            32767.0 * volume * numpy.cos(self._frequency * numpy.pi * pos / self._sample_rate))
-
-    def __init__(self, wps: int = 24, samplerate: int = 4000, freq: int = 2000, dtype=numpy.int16):
-        self._frequency = freq
-        self._sample_rate = samplerate
-        self._dot_length = 1.2 / wps
-        self._dtype = dtype
-
-    def encode(self, msg: str):
-        msg_encoded = encode_to_morse(msg)
-        frames = numpy.array([], dtype=self._dtype)
-        spaceduration = {
-            ' ': self._dot_length * 3,
-            '/': self._dot_length * 7
-        }
-
-        wavec = numpy.array([], dtype=self._dtype)
-        for i in range(int(self._dot_length * self._sample_rate)):
-            wavec = numpy.append(wavec, self.gen_wave(i))
-
-        for char in msg_encoded:
-            if char == '.':
-                frames = numpy.append(frames, wavec)
-            elif char == '-':
-                frames = numpy.append(frames, numpy.tile(wavec, 3))
-            if char not in spaceduration:
-                duration = self._dot_length
-            else:
-                duration = spaceduration[char]
-
-            frames = numpy.append(frames, numpy.zeros(int(duration * self._sample_rate), dtype=self._dtype))
-        return frames
