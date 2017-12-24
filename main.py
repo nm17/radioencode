@@ -1,13 +1,15 @@
-import base64
-import wave
+import numpy
+import sounddevice as sd
 
-import morseengine
+import morse
 
-if __name__ == "__main__":
-    samplerate = 4000.0
-    file = wave.open('out.wav', 'wb')
-    file.setnchannels(1)  # mono
-    file.setsampwidth(2)
-    file.setframerate(samplerate)
-    file.writeframes(morseengine.MorseEngine(samplerate=samplerate).encode(base64.b64encode(b'paris').decode()))
-    file.close()
+samplerate = 48000
+req = input('[L]oad, [P]lay or [S]ave> ')
+if req.upper() == 'L':
+    sd.play(numpy.load(input('File name> '))['arr_0'], samplerate=samplerate, blocking=True)
+elif req.upper() == 'S':
+    data = morse.Morse(samplerate=48000).encode(input('Text to encode> '))
+    numpy.savez_compressed(input('File name> '), data)
+elif req.upper() == 'P':
+    data = morse.Morse(samplerate=48000).encode(input('Text to encode> '))
+    sd.play(data, samplerate=samplerate, blocking=True)
