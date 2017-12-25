@@ -1,19 +1,22 @@
 import numpy as np
+
 import morseencode
 
 
 class Morse:
-    def gen_wave(self, pos: int, volume: float = 0.5):
-        return self._dtype(
-            32767 * volume * np.cos(self._frequency * np.pi * pos / self._sample_rate))
+    def _gen_wave(self, volume: float = 0.5) -> np.ndarray:
+        arr = np.array([], dtype=self._dtype)
+        for t1 in range(int(self._dot_length * self._sample_rate)):
+            arr = np.append(arr, 32767 * volume * np.cos(self._frequency * np.pi * t1 / self._sample_rate))
+        return arr
 
-    def __init__(self, wps: int = 24, samplerate: int = 4000, freq: int = 2000, dtype=np.int16):
+    def __init__(self, wps: int = 24, samplerate: int = 4000, freq: int = 2000, dtype: type = np.int16):
         self._frequency = freq
         self._sample_rate = samplerate
         self._dot_length = 1.2 / wps
         self._dtype = dtype
 
-    def encode(self, msg: str):
+    def encode(self, msg: str) -> np.ndarray:
         msg_encoded = morseencode.encode_to_morse(msg)
         frames = np.array([], dtype=self._dtype)
         spaceduration = {
@@ -21,9 +24,7 @@ class Morse:
             '/': self._dot_length * 7
         }
 
-        wavec = np.array([], dtype=self._dtype)
-        for i in range(int(self._dot_length * self._sample_rate)):
-            wavec = np.append(wavec, self.gen_wave(i))
+        wavec = self._gen_wave()
         waveclong = np.tile(wavec, 3)
         for char in msg_encoded:
             if char == '.':

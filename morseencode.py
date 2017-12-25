@@ -67,7 +67,7 @@ def decode_morse(code, position_in_string=0):
 
 # encode a message in morse code, spaces between words are represented by '/'
 def encode_to_morse(message):
-    encoded_message = ""
+    encoded_message = ''
     for char in message:
         encoded_message += morseAlphabet[char.upper()] + " "
     return encoded_message
