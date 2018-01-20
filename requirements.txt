@@ -1,2 +1,4 @@
+soundfile
+termcolor
 numpy
 sounddevice

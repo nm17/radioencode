@@ -1,6 +1,17 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from builtins import *
+# etc., as needed
+
+from future import standard_library
+standard_library.install_aliases()
+
 import numpy as np
 
-import morseencode
+import encode
 
 
 class Morse:
@@ -15,14 +26,14 @@ class Morse:
         self._sample_rate = samplerate
         self._dot_length = 1.2 / wps
         self._dtype = dtype
-
-    def encode(self, msg: str) -> np.ndarray:
-        msg_encoded = morseencode.encode_to_morse(msg)
-        frames = np.array([], dtype=self._dtype)
-        spaceduration = {
+        self.__spaceduration = {
             ' ': self._dot_length * 3,
             '/': self._dot_length * 7
         }
+
+    def encode(self, msg: str) -> np.ndarray:
+        msg_encoded = encode.encode_to_morse(msg)
+        frames = np.array([], dtype=self._dtype)
 
         wavec = self._gen_wave()
         waveclong = np.tile(wavec, 3)
@@ -31,10 +42,10 @@ class Morse:
                 frames = np.append(frames, wavec)
             elif char == '-':
                 frames = np.append(frames, waveclong)
-            if char not in spaceduration:
+            if char not in self.__spaceduration:
                 duration = self._dot_length
             else:
-                duration = spaceduration[char]
+                duration = self.__spaceduration[char]
 
             frames = np.append(frames, np.zeros(int(duration * self._sample_rate), dtype=self._dtype))
         return frames
