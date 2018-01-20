@@ -1,16 +1,8 @@
 # Morse code encoder
-Program to encode message to numpy zipped sound array.
-
-## Example
-### Load example
-
-    [L]oad, [P]lay or [S]ave> L
-    File name> example.npz
-    <Plays morse encoded message 'HELLO WORLD'>
-
-### Save example
-
-    [L]oad, [P]lay or [S]ave> S
-    Text to encode> hello world
-    Name of file> example
-    <Saves audio file to 'example.npz'>
+## Что сделал
+  1. Переделал [этот](https://gist.github.com/ebuckley/1842461) гист и добавил в проект (`morseencode.py`).
+  2. Разобрался с numpy массивами и сделал код для создания аудио волны в numpy массив.
+  3. Класс который ввыводит массив с значениями аудиофайла котрый можно зайти в любой формат. (`.wav`, `.flac`, и т.д).
+  4. Возможность использовать разные числовые форматы (32/64-битное число с плавующей запятой, 8/16/32/64-битное целое число.).
+  5. Консольная утилита (`main.py`).
+  6. Возможность прослушать готовый аудио файл в консоли.
