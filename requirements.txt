@@ -1,4 +1,3 @@
 soundfile
-termcolor
 numpy
 sounddevice
