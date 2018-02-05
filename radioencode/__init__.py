@@ -1,5 +1,8 @@
 import numpy as np
+import os
+import unittest
 
+import numpy
 try:
     input = raw_input
 except NameError:
@@ -138,3 +141,16 @@ def main():
         else:
             print('Stopping...')
             break
+
+
+class RadioEncodeTest(unittest.TestCase):
+    def test_enc(self):
+        arr = numpy.load(os.path.join('radioencode', 'data', 'hello.npy'))
+        morse = Morse()
+        self.assertTrue(numpy.allclose(
+            arr, morse.encode('hello')
+        ))
+
+
+if __name__ == '__main__':
+    unittest.main()
