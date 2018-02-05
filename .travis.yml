@@ -20,3 +20,7 @@ install:
 script:
   - pip install pytest
   - pytest radioencode/tests.py
+  - coverage run radioencode/tests.py
+
+after_success:
+  - codecov
