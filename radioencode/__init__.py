@@ -1,5 +1,10 @@
 import numpy as np
 
+try:
+    input = raw_input
+except NameError:
+    pass
+
 morseAlphabet = {
     "A": ".-",
     "B": "-...",
@@ -21,7 +26,7 @@ morseAlphabet = {
     "R": ".-.",
     "S": "...",
     "T": "-",
-    "U": "..-",
+    "": "..-",
     "V": "...-",
     "W": ".--",
     "X": "-..-",
@@ -75,13 +80,13 @@ def encode_to_morse(message):
     return encoded_message
 
 
-class Morse:
+class Morse(object):
     def _gen_wave(self):
         arr = (np.sin(2 * np.pi * np.arange(
             int(self._dot_length * self._sample_rate)) * self._frequency / self._sample_rate)).astype(self._dtype)
         return arr
 
-    def __init__(self, wps: int = 24, samplerate: int = 48000, freq: int = 1000, dtype: type = np.float32):
+    def __init__(self, wps=24, samplerate=48000, freq=1000, dtype=float):
         self._frequency = freq
         self._sample_rate = samplerate
         self._dot_length = 1.2 / wps
@@ -91,7 +96,7 @@ class Morse:
             '/': self._dot_length * 7
         }
 
-    def encode(self, msg: str):
+    def encode(self, msg):
         msg_encoded = encode_to_morse(msg)
         frames = np.array([], dtype=self._dtype)
 
