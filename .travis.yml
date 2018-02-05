@@ -12,5 +12,5 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - pip install pytest
+  - pip install pytest python-logilab-common
   - pytest radioencode/tests.py # or py.test for Python versions 3.5 and below
