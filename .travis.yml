@@ -1,5 +1,10 @@
 language: python
 
+addons:
+  apt:
+    packages:
+      - python-logilab-common
+
 python:
   - "2.6"
   - "2.7"
@@ -12,5 +17,5 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - pip install pytest python-logilab-common
+  - pip install pytest
   - pytest radioencode/tests.py # or py.test for Python versions 3.5 and below
