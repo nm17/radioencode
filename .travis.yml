@@ -1,4 +1,10 @@
 language: python
+
+addons:
+  apt:
+    packages:
+    - pytest
+
 python:
   - "2.6"
   - "2.7"
