@@ -76,7 +76,7 @@ def encode_to_morse(message):
 
 
 class Morse:
-    def _gen_wave(self) -> np.ndarray:
+    def _gen_wave(self):
         arr = (np.sin(2 * np.pi * np.arange(
             int(self._dot_length * self._sample_rate)) * self._frequency / self._sample_rate)).astype(self._dtype)
         return arr
@@ -91,7 +91,7 @@ class Morse:
             '/': self._dot_length * 7
         }
 
-    def encode(self, msg: str) -> np.ndarray:
+    def encode(self, msg: str):
         msg_encoded = encode_to_morse(msg)
         frames = np.array([], dtype=self._dtype)
 
@@ -122,14 +122,14 @@ def main():
             data = Morse(samplerate=samplerate).encode(input('Text to encode> '))
             try:
                 sf.write(input('File name: '), data, samplerate)
-            except Exception as err:
-                print('Error saving file: {}'.format(err), 'red')
+            except Exception:
+                print('Error saving file')
         elif req.upper() == 'P':
             data = Morse(samplerate=samplerate).encode(input('Text to encode> '))
             try:
                 sd.play(data, samplerate=samplerate, blocking=True)
-            except Exception as err:
-                print('Error playing file: {}'.format(err))
+            except Exception:
+                print('Error playing file')
         else:
             print('Stopping...')
             break
