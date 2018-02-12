@@ -1,3 +1,0 @@
-soundfile
-numpy
-sounddevice

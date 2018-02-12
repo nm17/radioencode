@@ -3,6 +3,7 @@ import os
 import unittest
 
 import numpy
+
 try:
     input = raw_input
 except NameError:
@@ -86,7 +87,10 @@ def encode_to_morse(message):
 class Morse(object):
     def _gen_wave(self):
         arr = (np.sin(2 * np.pi * np.arange(
-            int(self._dot_length * self._sample_rate)) * self._frequency / self._sample_rate)).astype(self._dtype)
+            int(
+                self._dot_length * self._sample_rate))
+                      * self._frequency
+                      / self._sample_rate)).astype(self._dtype)
         return arr
 
     def __init__(self, wps=24, samplerate=48000, freq=1000, dtype=float):
@@ -115,7 +119,9 @@ class Morse(object):
             else:
                 duration = self.__spaceduration[char]
 
-            frames = np.append(frames, np.zeros(int(duration * self._sample_rate), dtype=self._dtype))
+            frames = np.append(frames,
+                               np.zeros(int(duration * self._sample_rate),
+                                        dtype=self._dtype))
         return frames
 
 
@@ -127,13 +133,15 @@ def main():
     while True:
         req = input('[P]lay or [S]ave: ')
         if req.upper() == 'S':
-            data = Morse(samplerate=samplerate).encode(input('Text to encode> '))
+            data = Morse(samplerate=samplerate).encode(
+                input('Text to encode> '))
             try:
                 sf.write(input('File name: '), data, samplerate)
             except Exception:
                 print('Error saving file')
         elif req.upper() == 'P':
-            data = Morse(samplerate=samplerate).encode(input('Text to encode> '))
+            data = Morse(samplerate=samplerate).encode(
+                input('Text to encode> '))
             try:
                 sd.play(data, samplerate=samplerate, blocking=True)
             except Exception:
@@ -153,4 +161,4 @@ class RadioEncodeTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main()

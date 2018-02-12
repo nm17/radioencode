@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='radioencode',
-    version='0.2',
+    version='0.3',
     packages=['radioencode'],
     url='https://github.com/NeverMine17/radioencode',
     license='MIT',
@@ -13,5 +13,6 @@ setup(
         'console_scripts': [
             'radioencode = radioencode:main',
         ],
-    }
+    },
+    install_requires=['soundfile', 'numpy', 'sounddevice']
 )

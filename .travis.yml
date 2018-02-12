@@ -25,3 +25,5 @@ script:
 
 after_success:
   - codecov
+  - pip install flake8
+  - flake8 --count radioencode
