@@ -1,9 +1,13 @@
 language: python
 
-addons:
-  apt:
-    packages:
-      - python-logilab-common
+upload:
+  provier: pypi
+  user: "NeverMine17"
+  password:
+  secure: "cE7JxJNnPAofZorYYhEl2ZJzNHVSC3a0GS4q/s/yU/IXK/w7v1hNxfGmBGiwJXuLmR0CxWIBb3cb10XdGRP3yfeaUfSsKfDieY5PUpGrQe5NWzqC8mpJtoK6t9BSaKnn0qzpAoVb9w8F/ZTuq9TIlslu3NDykc11HiJR1fBNaoidB4R6IE6SZl7p+jgB6Kkyd9zgek5XCKhOXKGF/ydOVfnHKd5i2kB/ckSi3PTRzCpQgVfvoQyxINhymRPr82qP+AHmuOpDkngd8UOrRyo9vZxXqs3zA8E4ITMJSd8KV41yQyIZNOUybc0tNeI5JNyfhf09v2uWjrfh41SYinPAiEX0NSbujePC95uIERxxKrEDciMp5eFFYIkeL/dtmLpUurYHF7U+ExC8dvHYEJ/txyNnYrelLUqyFyNGLv5bZoRFQDJ+lYonca6DGrhRvbBrS8pyWDDoy/gEQEbJkuYeAIl3WlH6FpChXuVFsH28/+x7t8cVMbaQyRvshZYDrPtyO1UAs9PV9DZVb2KH87PtFxcLOVCRUOLiysr9BGPXy6m0PFeoiDoslfZjK3povdUz4GQYM6WxXNDs/0LKjedfxRVRcusVObrk6jwV/vSUZYNRu88eqyH5uTEps5AapXhTkWAHEgXwzGOoYkJ+febKh4wV57gthF0oTV9OxXqFPBY="
+  on:
+    tags: true
+    branch: master
 
 python:
   - "2.6"
@@ -14,17 +18,15 @@ python:
 
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
   - pip install codecov
+  - python setup.py build
+  - python setup.py install
 
 # command to run tests
 script:
-  - python setup.py build
   - pip install pytest
   - pytest radioencode/__init__.py
-  - coverage run radioencode/__init__.py
 
 after_success:
-  - codecov
   - pip install flake8
   - flake8 --count radioencode
