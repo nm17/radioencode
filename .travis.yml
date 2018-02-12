@@ -19,6 +19,7 @@ install:
 
 # command to run tests
 script:
+  - python setup.py build
   - pip install pytest
   - pytest radioencode/__init__.py
   - coverage run radioencode/__init__.py
