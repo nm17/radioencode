@@ -60,8 +60,13 @@ morseAlphabet = {
 inverseMorseAlphabet = dict((v, k) for (k, v) in morseAlphabet.items())
 
 
-# parse a morse code string positionInString is the starting point for decoding
 def decode_morse(code, position_in_string=0):
+    """
+    decode a morse code string
+    :param code: morse code string
+    :param position_in_string: starting point for decoding
+    :return: normal text
+    """
     if position_in_string < len(code):
         morse_letter = ''
         for key, char in enumerate(code[position_in_string:]):
@@ -73,14 +78,15 @@ def decode_morse(code, position_in_string=0):
             else:
                 morse_letter += char
     else:
-        raise KeyError("Bad morse char")
+        raise KeyError('Bad morse char')
 
 
-# encode a message in morse code, spaces between words are represented by '/'
+# encode a message in morse code
+# spaces between words are represented by '/'
 def encode_to_morse(message):
     encoded_message = ''
     for char in message:
-        encoded_message += morseAlphabet[char.upper()] + " "
+        encoded_message += morseAlphabet[char.upper()] + ' '
     return encoded_message
 
 
@@ -126,12 +132,16 @@ class Morse(object):
 
 
 def main():
-    import sounddevice as sd
+    play = True
+    try:
+        import sounddevice as sd
+    except ImportError or OSError:
+        play = False
     import soundfile as sf
 
     samplerate = 48000
     while True:
-        req = input('[P]lay or [S]ave: ')
+        req = input('[P]lay{} or [S]ave: '.format(' [X]' if play else ''))
         if req.upper() == 'S':
             data = Morse(samplerate=samplerate).encode(
                 input('Text to encode> '))
@@ -139,7 +149,7 @@ def main():
                 sf.write(input('File name: '), data, samplerate)
             except Exception:
                 print('Error saving file')
-        elif req.upper() == 'P':
+        elif req.upper() == 'P' and play:
             data = Morse(samplerate=samplerate).encode(
                 input('Text to encode> '))
             try:
