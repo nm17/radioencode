@@ -135,7 +135,9 @@ def main():
     play = True
     try:
         import sounddevice as sd
-    except ImportError or OSError:
+    except ImportError:
+        play = False
+    except OSError:
         play = False
     import soundfile as sf
 
