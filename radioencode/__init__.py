@@ -92,12 +92,9 @@ def encode_to_morse(message):
 
 class Morse(object):
     def _gen_wave(self):
-        arr = (np.sin(2 * np.pi * np.arange(
-            int(
-                self._dot_length * self._sample_rate))
-                      * self._frequency
-                      / self._sample_rate)).astype(self._dtype)
-        return arr
+        return (0xffff * np.sin(2 * np.pi * np.arange(
+            int(self._dot_length * self._sample_rate)) * self._frequency
+                / self._sample_rate)).astype(self._dtype)
 
     def __init__(self, wps=24, samplerate=48000, freq=1000, dtype=float):
         self._frequency = freq
@@ -132,35 +129,20 @@ class Morse(object):
 
 
 def main():
-    play = True
-    try:
-        import sounddevice as sd
-    except ImportError:
-        play = False
-    except OSError:
-        play = False
-    import soundfile as sf
+    import wave
 
     samplerate = 48000
     while True:
-        req = input('[P]lay{} or [S]ave: '.format(' [X]' if play else ''))
-        if req.upper() == 'S':
-            data = Morse(samplerate=samplerate).encode(
-                input('Text to encode> '))
-            try:
-                sf.write(input('File name: '), data, samplerate)
-            except Exception:
-                print('Error saving file')
-        elif req.upper() == 'P' and play:
-            data = Morse(samplerate=samplerate).encode(
-                input('Text to encode> '))
-            try:
-                sd.play(data, samplerate=samplerate, blocking=True)
-            except Exception:
-                print('Error playing file')
-        else:
-            print('Stopping...')
-            break
+        data = Morse(samplerate=samplerate).encode(
+            input('Text to encode> '))
+        try:
+            with wave.open(input('File name: '), 'w') as file:
+                file.setnchannels(1)
+                file.setframerate(samplerate)
+                file.setsampwidth(2)
+                file.writeframes(data.astype('<h'))
+        except Exception:
+            print('Error saving file')
 
 
 class RadioEncodeTest(unittest.TestCase):
