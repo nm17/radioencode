@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='radioencode',
-    version='0.3',
+    version='0.5',
     packages=['radioencode'],
     url='https://github.com/NeverMine17/radioencode',
     license='MIT',

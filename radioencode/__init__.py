@@ -1,8 +1,5 @@
 import numpy as np
-import os
-import unittest
-
-import numpy
+from audiolazy.lazy_synth import fadein, fadeout
 
 try:
     input = raw_input
@@ -92,14 +89,21 @@ def encode_to_morse(message):
 
 class Morse(object):
     def _gen_wave(self):
-        arr = (np.sin(2 * np.pi * np.arange(
-            int(
-                self._dot_length * self._sample_rate))
-                      * self._frequency
-                      / self._sample_rate)).astype(self._dtype)
+        def _fadein(x):
+            return np.array(list(fadein(x)), dtype=self._dtype)
+
+        def _fadeout(x):
+            return np.array(list(fadeout(x)), dtype=self._dtype)
+
+        arr = np.sin(2 * np.pi * self._frequency * np.arange(
+            self._dot_length * self._sample_rate) / self._sample_rate)
+        arr[:int(self._sample_rate * self._dot_length / 32)] *= \
+            _fadein(int(self._sample_rate * self._dot_length / 32))
+        arr[len(arr) - int(self._sample_rate * self._dot_length / 32):] *= \
+            _fadeout(int(self._sample_rate * self._dot_length / 32))
         return arr
 
-    def __init__(self, wps=24, samplerate=48000, freq=1000, dtype=float):
+    def __init__(self, wps=24, samplerate=44100, freq=440, dtype=float):
         self._frequency = freq
         self._sample_rate = samplerate
         self._dot_length = 1.2 / wps
@@ -141,17 +145,18 @@ def main():
         play = False
     import soundfile as sf
 
-    samplerate = 48000
+    samplerate = 96000
+    freq = 8000
     while True:
         req = input('[P]lay{} or [S]ave: '.format(' [X]' if play else ''))
-        if req.upper() == 'S':
-            data = Morse(samplerate=samplerate).encode(
+        if req[0].upper() == 'S':
+            data = Morse(samplerate=samplerate, freq=freq).encode(
                 input('Text to encode> '))
             try:
                 sf.write(input('File name: '), data, samplerate)
-            except Exception:
-                print('Error saving file')
-        elif req.upper() == 'P' and play:
+            except Exception as err:
+                print('Error saving file' + str(err))
+        elif req[0].upper() == 'P' and play:
             data = Morse(samplerate=samplerate).encode(
                 input('Text to encode> '))
             try:
@@ -161,15 +166,6 @@ def main():
         else:
             print('Stopping...')
             break
-
-
-class RadioEncodeTest(unittest.TestCase):
-    def test_enc(self):
-        arr = numpy.load(os.path.join('radioencode', 'data', 'hello.npy'))
-        morse = Morse()
-        self.assertTrue(numpy.allclose(
-            arr, morse.encode('hello')
-        ))
 
 
 if __name__ == '__main__':
